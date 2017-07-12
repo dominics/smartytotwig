@@ -4,3 +4,4 @@ dist/*
 *.egg*
 .DS_Store
 .tox
+.cache/*
