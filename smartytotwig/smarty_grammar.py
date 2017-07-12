@@ -394,6 +394,14 @@ class LeftDelim(EmptyLeafRule):
 class IncludeStatement(UnaryRule):
     grammar = '{', _, Keyword('include'), _, Literal('file='), Expression, _, '}'
 
+class ExtendsStatement(UnaryRule):
+    grammar = '{', _, Keyword('extends'), _, Expression, _, '}'
+
+class BlockContent(Rule):
+    grammar = some([SmartyLanguage])
+
+class BlockStatement(Rule):
+    grammar = '{', _, Keyword('block'), _, Expression, _, '}', BlockContent, '{/', Keyword('block'), '}'
 
 class SimpleTag(LeafRule):
     grammar = '{', _, re.compile('|'.join(['init_time', 'process_time'])), _, '}'
@@ -404,7 +412,7 @@ Finally, the actual language description.
 """
 
 SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
-                              IfStatement, ForStatement, IncludeStatement,
+                              IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
                               AssignStatement,
                               FunctionStatement, CommentStatement, SimpleTag,
                               PrintStatement, Content,
@@ -413,7 +421,7 @@ SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
 
 class SmartyLanguageMain(Rule):
     grammar = some([LiteralStatement, TranslationStatement,
-                    IfStatement, ForStatement, IncludeStatement,
+                    IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
                     AssignStatement,
                     FunctionStatement, CommentStatement, SimpleTag,
                     PrintStatement, Content,

@@ -453,3 +453,11 @@ def test_assign_function():
 def test_simple_tag():
     r = convert_code("{init_time}")
     assert r == '{{ init_time() }}'
+
+def test_extends():
+    r = convert_code("{extends \"foo/bar.html\"}")
+    assert r == '{% extends "foo/bar.html" %}'
+
+def test_block():
+    r = convert_code("{block \"foo\"}Some block content{/block}")
+    assert r == '{% block "foo" %}Some block content{% endblock %}'
