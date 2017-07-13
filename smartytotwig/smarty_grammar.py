@@ -373,8 +373,20 @@ class BlockStatementName(LeafRule):
     grammar = optional(Literal('name=')), optional(Literal('"')), Identifier, optional(Literal('"'))
 
 
+class BlockStatementAppend(EmptyLeafRule):
+    grammar = Literal('append')
+
+
+class BlockStatementPrepend(EmptyLeafRule):
+    grammar = Literal('prepend')
+
+
+class BlockStatementParameters(Rule):
+    grammar = some(_, [BlockStatementAppend, BlockStatementPrepend])
+
+
 class BlockStatement(Rule):
-    grammar = '{', _, Keyword('block'), _, BlockStatementName, _, '}',\
+    grammar = '{', _, Keyword('block'), _, BlockStatementName, _, optional(BlockStatementParameters), _, '}',\
               BlockContent,\
               '{/', Keyword('block'), '}'
 

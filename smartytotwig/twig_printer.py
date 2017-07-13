@@ -24,7 +24,8 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              MultOperator, DivOperator, ArithmeticOperator,
                              Number, ForVariableIdentifier, IncludeStatement,
                              ExtendsStatement, BlockContent, BlockStatement,
-                             BlockStatementName,
+                             BlockStatementName, BlockStatementParameters,
+                             BlockStatementAppend, BlockStatementPrepend,
                              IsLink, AssignStatement, IsOperator, SimpleTag)
 
 
@@ -490,8 +491,33 @@ class TwigPrinter(object):
     def visit(self, node, identifier):
         return identifier.value
 
+    @visitor(BlockStatementAppend)
+    def visit(self, node):
+        return ''
+
+    @visitor(BlockStatementPrepend)
+    def visit(self, node):
+        return ''
+
+    @visitor(BlockStatementParameters)
+    def visit(self, node, *foo):
+        node.prepend = any((isinstance(x, BlockStatementPrepend) for x in node.children))
+        node.append = any((isinstance(x, BlockStatementAppend) for x in node.children))
+        return ''
+
     @visitor(BlockStatement)
-    def visit(self, node, name, content):
+    def visit(self, node, name, *children):
+        content = ''.join(children)
+
+        if isinstance(node.children[1], BlockStatementParameters):
+            params = node.children[1]
+
+            if params.append:
+                content = '{{ parent() }}' + content
+
+            if params.prepend:
+                content = content + '{{ parent() }}'
+
         return '{%% block %s %%}%s{%% endblock %%}' % (name, content)
 
     @visitor(AssignStatement)
