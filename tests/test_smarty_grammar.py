@@ -426,6 +426,11 @@ def test_javascript():
     assert r == "{ dateFormat: 'yy-mm-dd' }"
 
 
+def test_javascript2():
+    r = convert_code("{\ndateFormat: 'yy-mm-dd'\n}")
+    assert r == "{\ndateFormat: 'yy-mm-dd'\n}"
+
+
 def test_include():
     r = convert_code('{include file="foo/bar.tpl"}')
     assert r == '{% include "foo/bar.twig" %}'
