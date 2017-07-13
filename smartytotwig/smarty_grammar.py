@@ -68,8 +68,7 @@ Misc.
 """
 
 class Content(LeafRule):
-    grammar = re.compile(r'[^{]+')
-
+    grammar = re.compile(r'([^{]|{(?=\s))+')
 
 class CommentStatement(LeafRule):
     grammar = re.compile(r"{\*.*?\*}", re.S)
