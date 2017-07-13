@@ -23,11 +23,6 @@ def test_print_symbol_no_filter():
     assert r == '{{ foo|raw }}'
 
 
-def test_whitespace_before():
-    r = convert_code("{   $foo}")
-    assert r == "{{ foo }}"
-
-
 def test_print_whitespace_after():
     r = convert_code("{$foo   }")
     assert r == "{{ foo }}"
@@ -489,3 +484,8 @@ def test_block_named_multiline():
 def test_extends_and_block():
     r = convert_code('{extends "settings.html"}\n\n{block name="foo"}\n{/block}\n')
     assert r == "{% extends \"settings.html\" %}\n\n{% block foo %}\n{% endblock %}\n"
+
+
+def test_smarty3_whitespace():
+    r = convert_code('{block name="foo"}\n<style>\n.foo {\ncolor: red;\n}\n</style>\n{/block}\n')
+    assert r == "{% block foo %}\n<style>\n.foo {\ncolor: red;\n}\n</style>\n{% endblock %}\n"
