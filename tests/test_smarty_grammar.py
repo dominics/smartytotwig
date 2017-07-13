@@ -460,16 +460,16 @@ def test_extends():
 
 def test_block():
     r = convert_code("{block \"foo\"}Some block content{/block}")
-    assert r == '{% block "foo" %}Some block content{% endblock %}'
+    assert r == '{% block foo %}Some block content{% endblock %}'
 
 def test_block_named():
     r = convert_code("{block name=\"foo\"}Some content{/block}")
-    assert r == '{% block "foo" %}Some content{% endblock %}'
+    assert r == '{% block foo %}Some content{% endblock %}'
 
 def test_block_prepend():
     r = convert_code("{block name=\"foo\" prepend}Some content{/block}")
-    assert r == '{% block "foo" %}Some content{{ parent() }}{% endblock %}'
+    assert r == '{% block foo %}Some content{{ parent() }}{% endblock %}'
 
 def test_block_append():
     r = convert_code("{block name=\"foo\" append}Some content{/block}")
-    assert r == '{% block "foo" %}{{ parent() }}Some content{% endblock %}'
+    assert r == '{% block foo %}{{ parent() }}Some content{% endblock %}'

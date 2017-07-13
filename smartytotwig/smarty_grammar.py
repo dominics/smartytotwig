@@ -365,6 +365,20 @@ class IsLink(LeafRule):
     grammar = Literal('quoted='), re.compile('true|false')
 
 
+class BlockContent(Rule):
+    grammar = some(_, SmartyLanguage)
+
+
+class BlockStatementName(LeafRule):
+    grammar = optional(Literal('name=')), optional(Literal('"')), Identifier, optional(Literal('"'))
+
+
+class BlockStatement(Rule):
+    grammar = '{', _, Keyword('block'), _, BlockStatementName, _, '}',\
+              BlockContent,\
+              '{/', Keyword('block'), '}'
+
+
 class TranslationStatement(Rule):
     grammar = ('{', _, Keyword('t'), _,
                Literal('id='), Expression,
@@ -394,14 +408,10 @@ class LeftDelim(EmptyLeafRule):
 class IncludeStatement(UnaryRule):
     grammar = '{', _, Keyword('include'), _, Literal('file='), Expression, _, '}'
 
+
 class ExtendsStatement(UnaryRule):
     grammar = '{', _, Keyword('extends'), _, Expression, _, '}'
 
-class BlockContent(Rule):
-    grammar = some([SmartyLanguage])
-
-class BlockStatement(Rule):
-    grammar = '{', _, Keyword('block'), _, Expression, _, '}', BlockContent, '{/', Keyword('block'), '}'
 
 class SimpleTag(LeafRule):
     grammar = '{', _, re.compile('|'.join(['init_time', 'process_time'])), _, '}'

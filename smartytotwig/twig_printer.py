@@ -24,6 +24,7 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              MultOperator, DivOperator, ArithmeticOperator,
                              Number, ForVariableIdentifier, IncludeStatement,
                              ExtendsStatement, BlockContent, BlockStatement,
+                             BlockStatementName,
                              IsLink, AssignStatement, IsOperator, SimpleTag)
 
 
@@ -484,6 +485,10 @@ class TwigPrinter(object):
     @visitor(BlockContent)
     def visit(self, node, *children):
         return ''.join(children)
+
+    @visitor(BlockStatementName)
+    def visit(self, node, identifier):
+        return identifier.value
 
     @visitor(BlockStatement)
     def visit(self, node, name, content):
