@@ -238,6 +238,7 @@ Expression.grammar = [FuncCall, Modifier, ObjectDereference,
 Smarty Statements.
 """
 
+
 class SmartyLanguage(Rule):
     pass
 
@@ -253,6 +254,7 @@ class ForeachelseStatement(UnaryRule):
 class NoFilter(EmptyLeafRule):
     grammar = Literal('nofilter')
 
+
 class PrintStatement(Rule):
     grammar = ('{', _,
                optional('e '),
@@ -267,7 +269,7 @@ class FunctionParameter(Rule):
 
 
 class FunctionStatement(Rule):
-    grammar = '{', _, Symbol, some(_, FunctionParameter), _, '}'
+    grammar = '{', Symbol, some(_, FunctionParameter), _, '}'
 
 
 class ForFrom(UnaryRule):
@@ -409,10 +411,6 @@ class RightDelimTag(EmptyLeafRule):
     grammar = '{rdelim}'
 
 
-class LeftDelim(EmptyLeafRule):
-    grammar = '{'
-
-
 class IncludeStatement(UnaryRule):
     grammar = '{', Keyword('include'), _, Literal('file='), Expression, _, '}'
 
@@ -430,20 +428,19 @@ Finally, the actual language description.
 """
 
 SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
-                              IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
+                              IfStatement, ForStatement, IncludeStatement, ExtendsStatement,
                               AssignStatement,
                               FunctionStatement, CommentStatement, SimpleTag,
                               PrintStatement, Content,
                               LeftDelimTag, RightDelimTag])
 
-
 class SmartyLanguageMain(Rule):
     grammar = some([LiteralStatement, TranslationStatement,
-                    IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
-                    AssignStatement,
-                    FunctionStatement, CommentStatement, SimpleTag,
-                    PrintStatement, Content,
-                    LeftDelimTag, RightDelimTag, LeftDelim])
+                   IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
+                   AssignStatement,
+                   FunctionStatement, CommentStatement, SimpleTag,
+                   PrintStatement, Content,
+                   LeftDelimTag, RightDelimTag])
 
 
 class SmartyLanguageMainOrEmpty(UnaryRule):

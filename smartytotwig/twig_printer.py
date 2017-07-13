@@ -15,7 +15,7 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              CommentStatement, LiteralStatement, ForItem,
                              ForFrom, ForName, ForKey, Text, ForeachParameters,
                              ForeachelseStatement, ForStatement, ForeachArray,
-                             FunctionParameter, FunctionStatement, LeftDelim,
+                             FunctionParameter, FunctionStatement,
                              ElseifStatement, LeftParen, RightParen,
                              IfMoreStatement, ForVariable, ForContent,
                              TranslationStatement, LeftDelimTag, RightDelimTag,
@@ -421,10 +421,6 @@ class TwigPrinter(object):
             return '{%% t %s %%}' % phrase
 
     @visitor(LeftDelimTag)
-    def visit(self, node):
-        return '{'
-
-    @visitor(LeftDelim)
     def visit(self, node):
         return '{'
 
