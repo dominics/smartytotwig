@@ -303,7 +303,7 @@ class IfMoreStatement(Rule):
 
 
 class IfStatement(Rule):
-    grammar = ('{', _, Keyword('if'), _, [IfConditionList, IfCondition], _, '}',
+    grammar = ('{', Keyword('if'), _, [IfConditionList, IfCondition], _, '}',
                SmartyLanguage, optional(IfMoreStatement), '{/', Keyword('if'), '}')
 
 
@@ -344,7 +344,7 @@ class ForVariableIdentifier(LeafRule):
 
 
 class ForVariable(Rule):
-    grammar = '{', _, Variable, '@', ForVariableIdentifier, optional(_, ForExpression), _, '}'
+    grammar = '{', Variable, '@', ForVariableIdentifier, optional(_, ForExpression), _, '}'
 
 
 class ForeachParameters(Rule):
@@ -356,7 +356,7 @@ class ForContent(Rule):
 
 
 class ForStatement(Rule):
-    grammar = ('{', _, Keyword('foreach'), [ForeachParameters, ForeachArray], _, '}',
+    grammar = ('{', Keyword('foreach'), [ForeachParameters, ForeachArray], _, '}',
                ForContent, optional(ForeachelseStatement),
                '{/', Keyword('foreach'), '}')
 
@@ -382,20 +382,20 @@ class BlockStatementParameters(Rule):
 
 
 class BlockStatement(Rule):
-    grammar = '{', _, Keyword('block'), _, BlockStatementName, _, optional(BlockStatementParameters), _, '}',\
+    grammar = '{', Keyword('block'), _, BlockStatementName, _, optional(BlockStatementParameters), _, '}',\
               SmartyLanguage,\
               '{/', Keyword('block'), '}'
 
 
 class TranslationStatement(Rule):
-    grammar = ('{', _, Keyword('t'), _,
+    grammar = ('{', Keyword('t'), _,
                Literal('id='), Expression,
                optional(_, IsLink),
                _, '}')
 
 
 class AssignStatement(Rule):
-    grammar = ('{', _, Keyword('assign'), _,
+    grammar = ('{', Keyword('assign'), _,
                Literal('var='), Identifier, _,
                Literal('value='), Expression,
                _, '}')
@@ -414,15 +414,15 @@ class LeftDelim(EmptyLeafRule):
 
 
 class IncludeStatement(UnaryRule):
-    grammar = '{', _, Keyword('include'), _, Literal('file='), Expression, _, '}'
+    grammar = '{', Keyword('include'), _, Literal('file='), Expression, _, '}'
 
 
 class ExtendsStatement(UnaryRule):
-    grammar = '{', _, Keyword('extends'), _, Expression, _, '}'
+    grammar = '{', Keyword('extends'), _, Expression, _, '}'
 
 
 class SimpleTag(LeafRule):
-    grammar = '{', _, re.compile('|'.join(['init_time', 'process_time'])), _, '}'
+    grammar = '{', re.compile('|'.join(['init_time', 'process_time'])), _, '}'
 
 
 """
