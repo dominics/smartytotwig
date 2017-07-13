@@ -450,26 +450,42 @@ def test_assign_function():
     r = convert_code("{assign var=cache_get_queries value=$cache->get_get_queries()}")
     assert r == '{% set cache_get_queries = cache.get_get_queries() %}'
 
+
 def test_simple_tag():
     r = convert_code("{init_time}")
     assert r == '{{ init_time() }}'
+
 
 def test_extends():
     r = convert_code("{extends \"foo/bar.html\"}")
     assert r == '{% extends "foo/bar.html" %}'
 
+
 def test_block():
     r = convert_code("{block \"foo\"}Some block content{/block}")
     assert r == '{% block foo %}Some block content{% endblock %}'
+
 
 def test_block_named():
     r = convert_code("{block name=\"foo\"}Some content{/block}")
     assert r == '{% block foo %}Some content{% endblock %}'
 
+
 def test_block_prepend():
     r = convert_code("{block name=\"foo\" prepend}Some content{/block}")
     assert r == '{% block foo %}Some content{{ parent() }}{% endblock %}'
 
+
 def test_block_append():
     r = convert_code("{block name=\"foo\" append}Some content{/block}")
     assert r == '{% block foo %}{{ parent() }}Some content{% endblock %}'
+
+
+def test_block_named_multiline():
+    r = convert_code("Some preceeding content\n\n{block name=\"foo\"}\n  Some content\n{/block}\n")
+    assert r == "Some preceeding content\n\n{% block foo %}\n  Some content\n{% endblock %}\n"
+
+
+def test_extends_and_block():
+    r = convert_code('{extends "settings.html"}\n\n{block name="foo"}\n{/block}\n')
+    assert r == "{% extends \"settings.html\" %}\n\n{% block foo %}\n{% endblock %}\n"

@@ -23,7 +23,7 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              ForExpression, AddOperator, SubOperator,
                              MultOperator, DivOperator, ArithmeticOperator,
                              Number, ForVariableIdentifier, IncludeStatement,
-                             ExtendsStatement, BlockContent, BlockStatement,
+                             ExtendsStatement, BlockStatement,
                              BlockStatementName, BlockStatementParameters,
                              BlockStatementAppend, BlockStatementPrepend,
                              IsLink, AssignStatement, IsOperator, SimpleTag)
@@ -482,10 +482,6 @@ class TwigPrinter(object):
     @visitor(ExtendsStatement)
     def visit(self, node, filename):
         return "{%% extends %s %%}" % filename.replace('.tpl', '.twig')
-
-    @visitor(BlockContent)
-    def visit(self, node, *children):
-        return ''.join(children)
 
     @visitor(BlockStatementName)
     def visit(self, node, identifier):

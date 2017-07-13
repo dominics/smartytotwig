@@ -365,10 +365,6 @@ class IsLink(LeafRule):
     grammar = Literal('quoted='), re.compile('true|false')
 
 
-class BlockContent(Rule):
-    grammar = some(_, SmartyLanguage)
-
-
 class BlockStatementName(LeafRule):
     grammar = optional(Literal('name=')), optional(Literal('"')), Identifier, optional(Literal('"'))
 
@@ -387,7 +383,7 @@ class BlockStatementParameters(Rule):
 
 class BlockStatement(Rule):
     grammar = '{', _, Keyword('block'), _, BlockStatementName, _, optional(BlockStatementParameters), _, '}',\
-              BlockContent,\
+              SmartyLanguage,\
               '{/', Keyword('block'), '}'
 
 
