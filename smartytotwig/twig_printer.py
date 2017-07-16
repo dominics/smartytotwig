@@ -5,7 +5,7 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              Identifier, LiteralStatement, Variable, Symbol,
                              EmptyOperator, ExpNoModifier, ModifierParameters,
                              ModifierElement, ModifierRight, Modifier,
-                             String, Expression, Array, SingleQuotedString,
+                             String, Expression, ExpressionList, Array, SingleQuotedString,
                              DoubleQuotedString, VariableString, FuncCall,
                              ObjectDereference, Content, NoFilter, IfCondition,
                              IfStatement, IfConditionList, NotOperator,
@@ -26,7 +26,8 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              ExtendsStatement, BlockStatement,
                              BlockStatementName, BlockStatementParameters,
                              BlockStatementAppend, BlockStatementPrepend,
-                             IsLink, AssignStatement, IsOperator, SimpleTag)
+                             IsLink, AssignStatement, ShortAssignStatement,
+                             IsOperator, SimpleTag)
 
 
 class TwigPrinter(object):
@@ -161,6 +162,15 @@ class TwigPrinter(object):
         1+1
         """
         return child
+
+    @visitor(ExpressionList)
+    def visit(self, node, *parts):
+        """
+        A compound expression in Smarty:
+        $foo + $bar
+        $bar && $wiz
+        """
+        return ' '.join(parts)
 
     @visitor(Identifier)
     def visit(self, node, value):
@@ -513,6 +523,10 @@ class TwigPrinter(object):
         return '{%% block %s %%}%s{%% endblock %%}' % (name, content)
 
     @visitor(AssignStatement)
+    def visit(self, node, var, value):
+        return "{%% set %s = %s %%}" % (var, value)
+
+    @visitor(ShortAssignStatement)
     def visit(self, node, var, value):
         return "{%% set %s = %s %%}" % (var, value)
 

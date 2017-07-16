@@ -169,11 +169,14 @@ class NotOperator(EmptyLeafRule):
 class AtOperator(EmptyLeafRule):
     grammar = Literal('@')
 
+
 class EmptyOperator(EmptyLeafRule):
     grammar = Literal('')
 
+
 class Variable(UnaryRule):
     grammar = Literal('$'), Identifier
+
 
 class Symbol(Rule):
     grammar = ([NotOperator, AtOperator, EmptyOperator],
@@ -229,8 +232,32 @@ class FuncCall(Rule):
     grammar = Identifier, omit(LeftParen), optional([FuncParams, Expression]), omit(RightParen)
 
 
+class AddOperator(EmptyLeafRule):
+    grammar = '+'
+
+
+class SubOperator(EmptyLeafRule):
+    grammar = '-'
+
+
+class MultOperator(EmptyLeafRule):
+    grammar = '*'
+
+
+class DivOperator(EmptyLeafRule):
+    grammar = '/'
+
+
+class ArithmeticOperator(UnaryRule):
+    grammar = [AddOperator, SubOperator, MultOperator, DivOperator]
+
+
 Expression.grammar = [FuncCall, Modifier, ObjectDereference,
                       Array, Symbol, String, VariableString]
+
+
+class ExpressionList(Rule):
+    grammar = Expression, maybe_some(_, [Operator, ArithmeticOperator], _, Expression)
 
 
 """
@@ -312,26 +339,6 @@ class ForeachArray(Rule):
     grammar = _, Expression, _, 'as', _, Symbol
 
 
-class AddOperator(EmptyLeafRule):
-    grammar = '+'
-
-
-class SubOperator(EmptyLeafRule):
-    grammar = '-'
-
-
-class MultOperator(EmptyLeafRule):
-    grammar = '*'
-
-
-class DivOperator(EmptyLeafRule):
-    grammar = '/'
-
-
-class ArithmeticOperator(UnaryRule):
-    grammar = [AddOperator, SubOperator, MultOperator, DivOperator]
-
-
 class Number(LeafRule):
     grammar = re.compile(r'\d+')
 
@@ -402,6 +409,10 @@ class AssignStatement(Rule):
                _, '}')
 
 
+class ShortAssignStatement(Rule):
+    grammar = '{', Variable, _, Literal('='), _, ExpressionList, _, '}'
+
+
 class LeftDelimTag(EmptyLeafRule):
     grammar = '{ldelim}'
 
@@ -428,7 +439,7 @@ Finally, the actual language description.
 
 SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
                               IfStatement, ForStatement, IncludeStatement, ExtendsStatement,
-                              AssignStatement,
+                              AssignStatement, ShortAssignStatement,
                               FunctionStatement, CommentStatement, SimpleTag,
                               PrintStatement, Content,
                               LeftDelimTag, RightDelimTag])
@@ -436,7 +447,7 @@ SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
 class SmartyLanguageMain(Rule):
     grammar = some([LiteralStatement, TranslationStatement,
                    IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
-                   AssignStatement,
+                   AssignStatement, ShortAssignStatement,
                    FunctionStatement, CommentStatement, SimpleTag,
                    PrintStatement, Content,
                    LeftDelimTag, RightDelimTag])

@@ -490,9 +490,21 @@ def test_extends_and_block():
     r = convert_code('{extends "settings.html"}\n\n{block name="foo"}\n{/block}\n')
     assert r == "{% extends \"settings.html\" %}\n\n{% block foo %}\n{% endblock %}\n"
 
+
 def test_block_assign_inner():
     r = convert_code('{block name=foo}\n{$isocode="US"}\n{/block}\n')
-    assert r == "{% block foo %}\n{assign isocode = \"US\"}\n{% endblock %}\n"
+    assert r == "{% block foo %}\n{% set isocode = \"US\" %}\n{% endblock %}\n"
+
+
+def test_assign_shortform():
+    r = convert_code('{$running_total=$running_total+$some_array}')
+    assert r == "{% set running_total = running_total + some_array %}"
+
+
+def test_assign_shortform_logical():
+    r = convert_code('{$running_total=$running_total && $some_array}')
+    assert r == "{% set running_total = running_total and some_array %}"
+
 
 def test_smarty3_whitespace():
     r = convert_code('{block name="foo"}\n<style>\n.foo {\ncolor: red;\n}\n</style>\n{/block}\n')
