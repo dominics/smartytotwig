@@ -5,7 +5,8 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              Identifier, LiteralStatement, Variable, Symbol,
                              EmptyOperator, ExpNoModifier, ModifierParameters,
                              ModifierElement, ModifierRight, Modifier,
-                             String, Expression, ExpressionList, Array, SingleQuotedString,
+                             String, Expression, ExpressionList, Array, ArrayLiteral,
+                             SingleQuotedString,
                              DoubleQuotedString, VariableString, FuncCall,
                              ObjectDereference, Content, NoFilter, IfCondition,
                              IfStatement, IfConditionList, NotOperator,
@@ -122,6 +123,14 @@ class TwigPrinter(object):
         $foo['hello']
         """
         return "%s[%s]" % (left, right)
+
+    @visitor(ArrayLiteral)
+    def visit(self, node, *parts):
+        """
+        An array literal in Smarty:
+        ['foo','bar']
+        """
+        return "[%s]" % (', '.join(parts))
 
     @visitor(NotOperator)
     def visit(self, node):

@@ -195,6 +195,10 @@ class Array(Rule):
     grammar = Symbol, "[", optional(Expression), "]"
 
 
+class ArrayLiteral(Rule):
+    grammar = "[", maybe_some(Expression, optional(',')), "]"
+
+
 class ObjectDereference(Rule):
     grammar = [Array, Symbol], ['.', '->'], Expression
 
@@ -253,11 +257,11 @@ class ArithmeticOperator(UnaryRule):
 
 
 Expression.grammar = [FuncCall, Modifier, ObjectDereference,
-                      Array, Symbol, String, VariableString]
+                      Array, ArrayLiteral, Symbol, String, VariableString]
 
 
 class ExpressionList(Rule):
-    grammar = Expression, maybe_some(_, [Operator, ArithmeticOperator], _, Expression)
+    grammar = Expression, maybe_some(_, [Operator, ArithmeticOperator, ',', ArrayLiteral], _, Expression)
 
 
 """
