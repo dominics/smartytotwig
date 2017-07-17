@@ -394,8 +394,8 @@ class BlockStatementParameters(Rule):
 
 
 class BlockStatement(Rule):
-    grammar = '{', Keyword('block'), _, BlockStatementName, _, optional(BlockStatementParameters), _, '}',\
-              SmartyLanguage,\
+    grammar = '{', Keyword('block'), _, BlockStatementName, _, optional(BlockStatementParameters), _, '}', \
+              [SmartyLanguage, EmptyOperator],\
               '{/', Keyword('block'), '}'
 
 
@@ -442,11 +442,12 @@ Finally, the actual language description.
 """
 
 SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
-                              IfStatement, ForStatement, IncludeStatement, ExtendsStatement,
+                              IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
                               AssignStatement, ShortAssignStatement,
                               FunctionStatement, CommentStatement, SimpleTag,
                               PrintStatement, Content,
                               LeftDelimTag, RightDelimTag])
+
 
 class SmartyLanguageMain(Rule):
     grammar = some([LiteralStatement, TranslationStatement,
