@@ -520,6 +520,17 @@ def test_assign_shortform_array():
     r = convert_code('{$somearr=["a","b"]}')
     assert r == '{% set somearr = ["a", "b"] %}'
 
+
 def test_smarty3_whitespace():
     r = convert_code('{block name="foo"}\n<style>\n.foo {\ncolor: red;\n}\n</style>\n{/block}\n')
     assert r == "{% block foo %}\n<style>\n.foo {\ncolor: red;\n}\n</style>\n{% endblock %}\n"
+
+
+def test_function_definition():
+    r = convert_code('{function foo} Foo {/function}')
+    assert r == '{* TODO: Define a Twig filter named foo *}'
+
+
+def test_function_definition_variables():
+    r = convert_code('{function something}\n{$foo} {$baz}\n{/function}\n\n{something foo=$bar baz="woo"}')
+    assert r == '{* TODO: Define a Twig filter named something *}\n\n{{ {\'foo\': bar, \'baz\': "woo"}|something }}'

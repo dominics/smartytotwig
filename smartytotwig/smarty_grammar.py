@@ -442,13 +442,22 @@ class SimpleTag(LeafRule):
     grammar = '{', re.compile('|'.join(['init_time', 'process_time'])), _, '}'
 
 
+class FunctionDefinitionName(LeafRule):
+    grammar = optional(Literal('name=')), optional(Literal('"')), Identifier, optional(Literal('"'))
+
+
+class FunctionDefinition(Rule):
+    grammar = '{', Keyword('function'), _, FunctionDefinitionName, _, '}', \
+              [SmartyLanguage, EmptyOperator], \
+              '{/', Keyword('function'), '}'
+
 """
 Finally, the actual language description.
 """
 
 SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
                               IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
-                              AssignStatement, ShortAssignStatement,
+                              AssignStatement, ShortAssignStatement, FunctionDefinition,
                               FunctionStatement, CommentStatement, SimpleTag,
                               PrintStatement, Content,
                               LeftDelimTag, RightDelimTag])
@@ -457,7 +466,7 @@ SmartyLanguage.grammar = some([LiteralStatement, TranslationStatement,
 class SmartyLanguageMain(Rule):
     grammar = some([LiteralStatement, TranslationStatement,
                    IfStatement, ForStatement, IncludeStatement, ExtendsStatement, BlockStatement,
-                   AssignStatement, ShortAssignStatement,
+                   AssignStatement, ShortAssignStatement, FunctionDefinition,
                    FunctionStatement, CommentStatement, SimpleTag,
                    PrintStatement, Content,
                    LeftDelimTag, RightDelimTag])

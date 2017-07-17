@@ -6,7 +6,7 @@ from .smarty_grammar import (SmartyLanguage, DollarSymbol, PrintStatement,
                              EmptyOperator, ExpNoModifier, ModifierParameters,
                              ModifierElement, ModifierRight, Modifier,
                              String, Expression, ExpressionList, Array, ArrayLiteral,
-                             SingleQuotedString,
+                             SingleQuotedString, FunctionDefinition, FunctionDefinitionName,
                              DoubleQuotedString, VariableString, FuncCall,
                              ObjectDereference, Content, NoFilter, IfCondition,
                              IfStatement, IfConditionList, NotOperator,
@@ -542,5 +542,13 @@ class TwigPrinter(object):
     @visitor(SimpleTag)
     def visit(self, node, value):
         return "{{ %s() }}" % value
+
+    @visitor(FunctionDefinitionName)
+    def visit(self, node, identifier):
+        return identifier.value
+
+    @visitor(FunctionDefinition)
+    def visit(self, node, name, *children):
+        return '{* TODO: Define a Twig filter named %s *}' % (name)
 
     # pylint: enable=W0612,E0102
