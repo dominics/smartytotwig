@@ -490,9 +490,11 @@ def test_extends_and_block():
     r = convert_code('{extends "settings.html"}\n\n{block name="foo"}\n{/block}\n')
     assert r == "{% extends \"settings.html\" %}\n\n{% block foo %}\n{% endblock %}\n"
 
+
 def test_block_named_empty():
     r = convert_code('{block name="foo"}{/block}')
     assert r == '{% block foo %}{% endblock %}'
+
 
 def test_block_block():
     r = convert_code('{block name=foo}{block name="bar"}{/block}{/block}')

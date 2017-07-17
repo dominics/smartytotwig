@@ -67,8 +67,10 @@ class EmptyLeafRule(object):
 Misc.
 """
 
+
 class Content(LeafRule):
     grammar = re.compile(r'([^{]|{(?=\s))+')
+
 
 class CommentStatement(LeafRule):
     grammar = re.compile(r"{\*.*?\*}", re.S)
@@ -210,14 +212,17 @@ class VariableString(Rule):
 class ExpNoModifier(UnaryRule):
     grammar = Literal(':'), [ObjectDereference, Array, Symbol, VariableString, String]
 
+
 class ModifierParameters(Rule):
     grammar = some(ExpNoModifier)
+
 
 class ModifierElement(Rule):
     grammar = ('|',
                [AtOperator, EmptyOperator],
                Identifier,
                optional(ModifierParameters))
+
 
 class ModifierRight(Rule):
     grammar = some(ModifierElement)
